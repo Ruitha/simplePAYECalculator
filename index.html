@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KENYA PAYE TAX CALCULATOR</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <nav>
+      <header>
+        <ul><li>PAYE CALCULATOR</li></ul>
+      </header>
+    </nav>
+
+    <main>
+      <div class="section calculator">
+        <form action="">
+          <div class="form-group">
+            <label for="pay-period">Pay Period:</label>
+
+            <div class="flex-section mobl">
+              <section">
+                <input type="radio" name="pay-period" data-option value="Month" checked/>
+                
+                <p>Month</p>
+              </section>
+              <section">
+                <input type="radio" name="pay-period" data-option value="Year" />
+                
+                <p>Year</p>
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="basic-salary">Basic Salary:</label>
+            <div class="flex-section">
+              <section class="disabled">
+                <input type="number" name="basic-salary" data-num id="basic-salary" />
+                <input type="button" value="KSH" disabled />
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="benefits">Benefits (Bonus, Allowace):</label>
+            <div class="flex-section">
+              <section class="disabled">
+                <input type="number" name="benefits" data-num id="benefits" />
+                <input type="button" value="KSH" disabled />
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ded-nssf">Deduct NSSF:</label>
+            <div class="flex-section ">
+              <section">
+                <input type="radio" name="ded-nssf" data-option value="nssf_yes" checked />
+                
+                <p>Yes</p>
+              </section>
+              <section">
+                <input type="radio" name="ded-nssf" data-option value="nssf_no" />
+                
+                <p>No</p>
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nssf-rates">NSSF Rates:</label>
+            <div class="flex-section mobl">
+              <section">
+                <input type="radio" name="nssf-rates" data-option='to-disable' value="new_nssf_rates" checked />
+                
+                <p>New NSSF Rates(Tiered)</p>
+              </section>
+              <section">
+                <input type="radio" name="nssf-rates" data-option='to-disable' value="old_nssf_rates" />
+                
+                <p>OLD NSSF Rates(KSH200)</p>
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ded-nhif">Deduct NHIF:</label>
+            <div class="flex-section">
+              <section">
+                <input type="radio" name="ded-nhif" data-option value="nhif_yes" checked/>
+                
+                <p>Yes</p>
+              </section>
+              <section">
+                <input type="radio" name="ded-nhif" data-option value="nhif_no" />
+                
+                <p>No</p>
+              </section>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="button" value="CALCULATE" id="submit"/>
+          </div>
+        </form>
+      </div>
+
+      <div class="section output">
+        <!-- dynamic create table -->
+
+        <!-- <table id="results-t">
+            
+                <tr>
+                    <th>Income Before Pension Deduction</th>
+                    <td>${basicSalary ?? 0}</td>
+                </tr>
+                 <tr>
+                    <th>Deductible NSSF Pension Contribution</th>
+                    <td>${benefits ?? 0}</td>
+                </tr>
+                 <tr>
+                    <th>Income After Pension DEductions</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Benefits in Kind</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Taxable Income</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Tax on Taxable Income</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Personal Relief</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Tax Off Relief</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>PAYE</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>Chargeable Income</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr>
+                    <th>NHIF Contribution</th>
+                    <td>222,000.00</td>
+                </tr>
+                 <tr id="netpay">
+                    <th>Net Pay</th>
+                    <td>222,000.00</td>
+                </tr>
+
+            
+        </table> -->
+
+
+        
+      </div>
+    </main>
+
+    <footer>&copy; 2022 b_mutea</footer>
+
+    <script type="module" src="./assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+// const ded_nhifRadioChecks = document.querySelectorAll("input[name='ded-nhif']");
+// const amountInputs = document.querySelectorAll("[type='number']");
+// const calculateBtn = document.querySelector("#submit");
+// const outputSection = document.querySelector(".output");
+
+// outputSection.classLis.add("nthing");
+
+// let kshFomat = Intl.NumbetorrFormat("en-US", {
+//   style: "currency",
+//   currency: "KSH",
+// });
+// // radiosBtnsChecked.forEach((r_btn) => {
+// //   r_btn.addEventListener("click", () => {
+// //     if (r_btn.checked) {
+// //       le checkedBtn = r_btn.value;
+// //       return checkedBtn;
+// //     }
+// //   });
+// // });
+// cnst adioChecked = ) => {};
+
+// const waitor(tTime = (timeoutSecs) => {
+//   return new Promise((resolve) => {
+//     setTimeout(resolve, timeoutSecs * 1000);
+//     clearTimeout();
+//   });
+// };
+
+// const getInputs = (btn_checked) => {
+//   console.log(btn_checked);
+//   let basicSalary = 0;
+//   let benefits = 0;
+//   let f = 0;
+//   amountInputs.forEach((input) => {
+//     if (input.name === "basic-salary") {
+//       basicSalary = kshFormat.format(input.value);
+//     } else if (input.name === "benefits") {
+//       benefits = kshFormat.format(input.value);
+//     }
+//     populateResultTable(basicSalary, benefits);
+//   });
+// };
+
+// const populateResultTable = (basicSalary, benefits) => {
+//   return (outputSection.innerHTML = `
+//     <table id="results-t">
+
+//                 <tr>
+//                     <th>Income Before Pension Deduction</th>
+//                     <td>${basicSalary ?? 0}</td>
+//                 </tr>
+//                  <tr>
+//                     <th>Deductible NSSF Pension Contribution</th>
+//                     <td>${benefits ?? 0}</td>
+//                 </tr>
+//                  <tr>
+//                     <th>Income After Pension DEductions</th    td>222,000.00<d>
+//                 </t>
+//             /<tr>
+//                      <tr>
+//                     <th>Benefits in Kind</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+//                  <tr>
+//                     <th>Taxable Income</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+//                  <tr>
+//                     <th>Tax on Taxable Income</th>
+//                     <td>222,000.00</td>
+//          </tr>
+//       r>
+//                            <t           <th>Personal Relief</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+// r>
+//                                     <t<th>TaxOffRelief</th>
+//                         <td>222,000.00</td>
+//                 </tr>
+//                  <tr>
+//                     <th>PAYE</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+//                  <tr>
+//                     <th>Chargeable Income</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+//                  <tr>
+//                     <th>NHIF Contribution</th>
+//                     <td>222,000.00</td>
+//             </tr>
+//       r id="netpay">
+//                <t                    <th>Net Pay</th>
+//                     <td>222,000.00</td>
+//                 </tr>
+
+//         </table>
+//     `);
+// };
+
+// calculateBtn.addEventListener("click", (e) => {
+//   e.preventDefault();
+//   radioChecked();
+//   getInputs();
+//   waitTime(0.5)
+//     .then(()=>{
+//outputSection.classList.remov         e("nothing");
+//       return waitTime(0.5);
+//     })
+//     .then(() => {
+//       populateResultTable();
+//       return waitTime(0.5);
+//     });
+// });
