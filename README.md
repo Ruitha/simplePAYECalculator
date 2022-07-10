@@ -1,3 +1,2 @@
 # Kenya-PAYE-Calculator
-paye calculator
-alert Code will be cleaned!! This not final
+Code will be cleaned!! This not final work
