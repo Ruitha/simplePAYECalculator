@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital@1&family=Lato:wght@300&family=Ubuntu+Condensed&display=swap');
 :root {
-    --main-font-family: 'Ubuntu Condensed',
+    --main-font-family: 'Poppins',
         sans-serif;
 
 }
@@ -10,7 +10,7 @@
     margin: 0;
 }
 body {
-    font-size: 65px;
+    font-size: 50px;
     font-family: var(--main-font-family);
     font-weight: 500;
     
@@ -49,7 +49,7 @@ nav header, footer {
     height: 50px;
     width: 100%;
     color: #fff;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     padding-left: 55px;
@@ -132,7 +132,7 @@ form .flex-section > section input:focus {
     position: absolute;
     right: -43px;
     border: none;
-    background-color: rgb(20, 204, 51);
+    background-color: rgb(29, 133, 47);
     color: #ffff;
     width: max-content;
     padding: 5px;

@@ -124,16 +124,16 @@ const evaluateNewNssfPension = (b_salary) => {
   let pensionConribution;
   let upperLimit = 18000;
   if (b_salary >= upperLimit) {
-    pensionConribution = upperLimit * 0.06;
+    pensionConribution = upperLimit * 0.56;
   } else {
-    pensionConribution = b_salary * 0.06;
+    pensionConribution = b_salary * 0.56;
   }
   return pensionConribution;
 };
 const evaluateNhif = (b_salary) => {
   let nhifContribution;
-  if (b_salary >= 1000) {
-    if (b_salary >= 1000 && b_salary <= 5999) {
+  if (b_salary >= 0) {
+    if (b_salary >= 0 && b_salary <= 5999) {
       nhifContribution = 150;
     } else if (b_salary >= 6000 && b_salary <= 7999) {
       nhifContribution = 300;
