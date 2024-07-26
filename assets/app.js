@@ -132,8 +132,8 @@ const evaluateNewNssfPension = (b_salary) => {
 };
 const evaluateNhif = (b_salary) => {
   let nhifContribution;
-  if (b_salary >= 1000) {
-    if (b_salary >= 1000 && b_salary <= 5999) {
+  if (b_salary >= 0) {
+    if (b_salary >= 0 && b_salary <= 5999) {
       nhifContribution = 150;
     } else if (b_salary >= 6000 && b_salary <= 7999) {
       nhifContribution = 300;

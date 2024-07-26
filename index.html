@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KENYA PAYE TAX CALCULATOR</title>
+    <title>PAYETaxCalcuator</title>
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
@@ -18,7 +18,7 @@
       <div class="section calculator">
         <form action="">
           <div class="form-group">
-            <label for="pay-period">Pay Period:</label>
+            <label for="pay-period">Pay Period: </label>
 
             <div class="flex-section mobl">
               <section">
@@ -55,7 +55,7 @@
           </div>
 
           <div class="form-group">
-            <label for="ded-nssf">Deduct NSSF:</label>
+            <label for="ded-nssf">Deduct NSSF: </label>
             <div class="flex-section ">
               <section">
                 <input type="radio" name="ded-nssf" data-option value="nssf_yes" checked />
@@ -71,7 +71,7 @@
           </div>
 
           <div class="form-group">
-            <label for="nssf-rates">NSSF Rates:</label>
+            <label for="nssf-rates">NSSF Rates: </label>
             <div class="flex-section mobl">
               <section">
                 <input type="radio" name="nssf-rates" data-option='to-disable' value="new_nssf_rates" checked />
@@ -87,7 +87,7 @@
           </div>
 
           <div class="form-group">
-            <label for="ded-nhif">Deduct NHIF:</label>
+            <label for="ded-nhif">Deduct NHIF: </label>
             <div class="flex-section">
               <section">
                 <input type="radio" name="ded-nhif" data-option value="nhif_yes" checked/>
@@ -109,68 +109,63 @@
       </div>
 
       <div class="section output">
-        <!-- dynamic create table -->
-
-        <!-- <table id="results-t">
-            
-                <tr>
-                    <th>Income Before Pension Deduction</th>
-                    <td>${basicSalary ?? 0}</td>
-                </tr>
-                 <tr>
-                    <th>Deductible NSSF Pension Contribution</th>
-                    <td>${benefits ?? 0}</td>
-                </tr>
-                 <tr>
-                    <th>Income After Pension DEductions</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Benefits in Kind</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Taxable Income</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Tax on Taxable Income</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Personal Relief</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Tax Off Relief</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>PAYE</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>Chargeable Income</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr>
-                    <th>NHIF Contribution</th>
-                    <td>222,000.00</td>
-                </tr>
-                 <tr id="netpay">
-                    <th>Net Pay</th>
-                    <td>222,000.00</td>
-                </tr>
-
-            
-        </table> -->
-
-
         
+        <!-- dynamic create table -->
+         <table id="results-t">
+            <tr>
+                <th>Income Before Pension Deduction</th>
+                <td>${basicSalary ?? 0}</td>
+            </tr>
+              <tr>
+                <th>Deductible NSSF Pension Contribution</th>
+                <td>${benefits ?? 0}</td>
+            </tr>
+              <tr>
+                <th>Income After Pension Deductions</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Benefits in Kind</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Taxable Income</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Tax on Taxable Income</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Personal Relief</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Tax Off Relief</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>PAYE</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>Chargeable Income</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr>
+                <th>NHIF Contribution</th>
+                <td>222,000.00</td>
+            </tr>
+              <tr id="netpay">
+                <th>Net Pay</th>
+                <td>222,000.00</td>
+            </tr>   
+          </table>
+
       </div>
     </main>
 
-    <footer>&copy; 2022 b_mutea</footer>
+    <footer>&copy; 2024 Wagema J.R</footer>
 
     <script type="module" src="./assets/app.js"></script>
   </body>
