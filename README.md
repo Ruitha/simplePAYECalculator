@@ -1,2 +1,3 @@
-# Kenya-PAYE-Calculator
-Code will be cleaned!! This not final work
+# PAYE Calculator
+
+A simple calculator that claculates your PAYE of your basic salary. 
