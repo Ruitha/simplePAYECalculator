@@ -1,5 +1,4 @@
 const onNssfNo = document.querySelectorAll("[data-option='to-disable'");
-
 const radioOptions = document.querySelectorAll("[data-option]");
 const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
 const basicSalaryInput = document.getElementById("basic-salary");
@@ -8,7 +7,7 @@ const calculateBtn = document.querySelector("#submit");
 const outputSection = document.querySelector(".output");
 const tableResultFields = document.querySelectorAll("td");
 
-let kshFormat = Intl.NumberFormat("en-US", {
+let kshFormat = Intl.NumberFormat("en-KE", {
   style: "currency",
   currency: "KSH",
 });
@@ -18,7 +17,6 @@ const formatIfIsNan = (elem) => {
     elem = kshFormat.format(elem);
   }
 };
-// console.log(basicSalaryInput, benefitsInput, numberInputs);
 
 const waitTime = (timeoutSecs) => {
   return new Promise((resolve) => {
@@ -42,58 +40,57 @@ const resultTable = (
   netPay
 ) => {
   outputSection.innerHTML = `
-  <table id="results-t">
+    <table id="results-t">
+        <tr>
+            <th>Income Before Pension Deduction</th>
+            <td>${kshFormat.format(b_salary)}</td>
+        </tr>
+          <tr>
+            <th>Deductible NSSF Pension Contribution</th>
+            <td>${kshFormat.format(pensionConribution)}</td>
+        </tr>
+          <tr>
+            <th>Income After Pension Deductions</th>
+            <td>${kshFormat.format(incomeAfterPension)}</td>
+        </tr>
+          <tr>
+            <th>Benefits in Kind</th>
+            <td>${kshFormat.format(benefitsInKind) ?? 0}</td>
+        </tr>
+          <tr>
+            <th>Taxable Income</th>
+            <td>${kshFormat.format(taxableIncome)}</td>
+        </tr>
+          <tr>
+            <th>Tax on Taxable Income</th>
+            <td>${kshFormat.format(taxOnTIncome)}</td>
+        </tr>
+          <tr>
+            <th>Personal Relief</th>
+            <td>${kshFormat.format(personalRelief)}</td>
+        </tr>
+          <tr>
+            <th>Tax Net Off Relief</th>
+            <td>${kshFormat.format(taxNetOffRelief)}</td>
+        </tr>
+          <tr>
+            <th>PAYE</th>
+            <td>${kshFormat.format(paye)}</td>
+        </tr>
+          <tr>
+            <th>Chargeable Income</th>
+            <td>${kshFormat.format(chargeableIncome)}</td>
+        </tr>
+          <tr>
+            <th>NHIF Contribution</th>
+            <td>${kshFormat.format(nhifContribution)}</td>
+        </tr>
+          <tr id="netpay">
+            <th>Net Pay</th>
+            <td>${kshFormat.format(netPay)}</td>
+        </tr>
 
-                <tr>
-                    <th>Income Before Pension Deduction</th>
-                    <td>${kshFormat.format(b_salary)}</td>
-                </tr>
-                 <tr>
-                    <th>Deductible NSSF Pension Contribution</th>
-                    <td>${kshFormat.format(pensionConribution)}</td>
-                </tr>
-                 <tr>
-                    <th>Income After Pension Deductions</th>
-                    <td>${kshFormat.format(incomeAfterPension)}</td>
-                </tr>
-                 <tr>
-                    <th>Benefits in Kind</th>
-                    <td>${kshFormat.format(benefitsInKind) ?? 0}</td>
-                </tr>
-                 <tr>
-                    <th>Taxable Income</th>
-                    <td>${kshFormat.format(taxableIncome)}</td>
-                </tr>
-                 <tr>
-                    <th>Tax on Taxable Income</th>
-                    <td>${kshFormat.format(taxOnTIncome)}</td>
-                </tr>
-                 <tr>
-                    <th>Personal Relief</th>
-                    <td>${kshFormat.format(personalRelief)}</td>
-                </tr>
-                 <tr>
-                    <th>Tax Net Off Relief</th>
-                    <td>${kshFormat.format(taxNetOffRelief)}</td>
-                </tr>
-                 <tr>
-                    <th>PAYE</th>
-                    <td>${kshFormat.format(paye)}</td>
-                </tr>
-                 <tr>
-                    <th>Chargeable Income</th>
-                    <td>${kshFormat.format(chargeableIncome)}</td>
-                </tr>
-                 <tr>
-                    <th>NHIF Contribution</th>
-                    <td>${kshFormat.format(nhifContribution)}</td>
-                </tr>
-                 <tr id="netpay">
-                    <th>Net Pay</th>
-                    <td>${kshFormat.format(netPay)}</td>
-                </tr>
-
-        </table>
+    </table>
   `;
 };
 
@@ -120,17 +117,36 @@ const getPayAndBenefits = () => {
   }
   return inputs;
 };
+
+// Calculate NSSF (Effective February 2024)
 const evaluateNewNssfPension = (b_salary) => {
-  let pensionConribution;
-  let upperLimit = 18000;
-  if (b_salary >= upperLimit) {
-    pensionConribution = upperLimit * 0.56;
+  let pensionContribution = 0;
+  const tier1Limit = 7000;
+  const tier2Limit = 36000;
+  const tierRate = 0.06; // 6% contribution rate
+
+  // Calculate Tier I contribution
+  if (b_salary <= tier1Limit) {
+    pensionContribution = b_salary * tierRate;
   } else {
-    pensionConribution = b_salary * 0.56;
+    pensionContribution = tier1Limit * tierRate;
+    // Calculate Tier II contribution
+    if (b_salary <= tier2Limit) {
+      pensionContribution += (b_salary - tier1Limit) * tierRate;
+    } else {
+      pensionContribution += (tier2Limit - tier1Limit) * tierRate;
+    }
   }
-  return pensionConribution;
+
+  // Ensure the contribution does not exceed the maximum allowed contribution
+  const maxContribution = 2160;
+  pensionContribution = Math.min(pensionContribution, maxContribution);
+
+  return pensionContribution;
 };
-const evaluateNhif = (b_salary) => {
+
+// Calculate NHIF 
+function evaluateNhif(b_salary) {
   let nhifContribution;
   if (b_salary >= 0) {
     if (b_salary >= 0 && b_salary <= 5999) {
@@ -172,28 +188,25 @@ const evaluateNhif = (b_salary) => {
     }
   }
   return nhifContribution;
-};
+}
+ // Calculate PAYE 
 const evaluateIncomeTax = (b_salary) => {
   let bs_taxed = 0;
-  if (b_salary <= 12298) {
-    bs_taxed = b_salary * 0.01;
-  } else if (b_salary >= 12999 && b_salary <= 23885) {
-    bs_taxed = b_salary * 0.15;
-  } else if (b_salary >= 23886 && b_salary <= 35472) {
-    bs_taxed = b_salary * 0.2;
-  } else if (b_salary >= 35473 && b_salary <= 47059) {
-    bs_taxed = b_salary * 0.25;
-  } else if (b_salary > 47059) {
-    bs_taxed = b_salary * 0.3;
+  
+  if (b_salary <= 24000) {
+    bs_taxed = b_salary * 0.10;
+  } else if (b_salary <= 32333) {
+    bs_taxed = (24000 * 0.10) + ((b_salary - 24000) * 0.25);
+  } else if (b_salary <= 500000) {
+    bs_taxed = (24000 * 0.10) + (8333 * 0.25) + ((b_salary - 32333) * 0.30);
+  } else if (b_salary <= 800000) {
+    bs_taxed = (24000 * 0.10) + (8333 * 0.25) + (467667 * 0.30) + ((b_salary - 500000) * 0.325);
+  } else {
+    bs_taxed = (24000 * 0.10) + (8333 * 0.25) + (467667 * 0.30) + (300000 * 0.325) + ((b_salary - 800000) * 0.35);
   }
+  
   return bs_taxed;
 };
-
-// const evaluateTaxOnTaxableIncome = (taxableIncome) => {
-//   if (taxableIncome <= 22080) {
-
-//   }
-// }
 
 const compileResultsDisplay = () => {
   let [b_salary, benefits] = getPayAndBenefits();
@@ -377,7 +390,7 @@ const compileResultsDisplay = () => {
     console.log(pensionConribution);
     personalRelief = personalRelief * 12;
     nhifContribution = nhifContribution * 12;
-    // console.log();
+    
     resultTable(
       b_salary,
       benefits,
@@ -476,4 +489,4 @@ calculateBtn.addEventListener("click", () => {
     compileResultsDisplay();
   }
 });
-// resultTable();
+
