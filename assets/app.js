@@ -1,4 +1,4 @@
-const onNssfNo = document.querySelectorAll("[data-option='to-disable'");
+const onNssfNo = document.querySelectorAll("[data-option='to-disable']");
 const radioOptions = document.querySelectorAll("[data-option]");
 const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
 const basicSalaryInput = document.getElementById("basic-salary");
@@ -12,6 +12,7 @@ let kshFormat = Intl.NumberFormat("en-KE", {
   currency: "KSH",
 });
 outputSection.classList.add("nothing");
+
 const formatIfIsNan = (elem) => {
   if (isNaN(elem)) {
     elem = kshFormat.format(elem);
@@ -24,7 +25,8 @@ const waitTime = (timeoutSecs) => {
     clearTimeout();
   });
 };
-const resultTable = (
+
+function resultTable(
   b_salary,
   benefits,
   pensionConribution,
@@ -35,64 +37,68 @@ const resultTable = (
   personalRelief,
   taxNetOffRelief,
   paye,
+  ahlDeduction,
   chargeableIncome,
   nhifContribution,
   netPay
-) => {
+) {
   outputSection.innerHTML = `
     <table id="results-t">
         <tr>
             <th>Income Before Pension Deduction</th>
             <td>${kshFormat.format(b_salary)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Deductible NSSF Pension Contribution</th>
             <td>${kshFormat.format(pensionConribution)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Income After Pension Deductions</th>
             <td>${kshFormat.format(incomeAfterPension)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Benefits in Kind</th>
             <td>${kshFormat.format(benefitsInKind) ?? 0}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Taxable Income</th>
             <td>${kshFormat.format(taxableIncome)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Tax on Taxable Income</th>
             <td>${kshFormat.format(taxOnTIncome)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Personal Relief</th>
             <td>${kshFormat.format(personalRelief)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>Tax Net Off Relief</th>
             <td>${kshFormat.format(taxNetOffRelief)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>PAYE</th>
             <td>${kshFormat.format(paye)}</td>
         </tr>
-          <tr>
+        <tr>
+            <th>Affordable Housing</th>
+            <td>${kshFormat.format(ahlDeduction)}</td>
+        </tr>
+        <tr>
             <th>Chargeable Income</th>
             <td>${kshFormat.format(chargeableIncome)}</td>
         </tr>
-          <tr>
+        <tr>
             <th>NHIF Contribution</th>
             <td>${kshFormat.format(nhifContribution)}</td>
         </tr>
-          <tr id="netpay">
+        <tr id="netpay">
             <th>Net Pay</th>
             <td>${kshFormat.format(netPay)}</td>
         </tr>
-
     </table>
   `;
-};
+}
 
 const radioChecked = () => {
   let defaultChecked = [];
@@ -112,7 +118,10 @@ const getPayAndBenefits = () => {
   let inputs = [];
 
   for (let salaryBenInp of payAndBenefitsInputs) {
-    if (salaryBenInp == " ") alert("Cannot calculate Empty values");
+    if (salaryBenInp.value === "") {
+      alert("Cannot calculate Empty values");
+      return [];
+    }
     inputs.push(parseFloat(salaryBenInp.value));
   }
   return inputs;
@@ -189,10 +198,11 @@ function evaluateNhif(b_salary) {
   }
   return nhifContribution;
 }
- // Calculate PAYE 
+
+// Calculate PAYE 
 const evaluateIncomeTax = (b_salary) => {
   let bs_taxed = 0;
-  
+
   if (b_salary <= 24000) {
     bs_taxed = b_salary * 0.10;
   } else if (b_salary <= 32333) {
@@ -204,34 +214,46 @@ const evaluateIncomeTax = (b_salary) => {
   } else {
     bs_taxed = (24000 * 0.10) + (8333 * 0.25) + (467667 * 0.30) + (300000 * 0.325) + ((b_salary - 800000) * 0.35);
   }
-  
+
   return bs_taxed;
 };
 
+// Calculate AHL Contributions
+const evaluateAffordableHousingLevy = (b_salary) => {
+  const levyRate = 0.015; // 1.5% contribution rate for Affordable Housing Levy
+  return b_salary * levyRate;
+};
+
+// Computing all Deductions 
 const compileResultsDisplay = () => {
   let [b_salary, benefits] = getPayAndBenefits();
-  let personalRelief = 2400;
-  let oldNssfRate = 200;
-  let pensionConribution = evaluateNewNssfPension(b_salary);
-  if (isNaN(benefits)) {
-    benefits = 0;
-  }
-  // taxOnRelief, paye, chargeableIncome, nhifContribution, netPay;
-  let benefitsInKind = benefits;
-  let incomeAfterPension = b_salary - pensionConribution;
-  let taxableIncome = benefitsInKind + incomeAfterPension;
-  let taxOnTIncome = evaluateIncomeTax(b_salary);
-  let taxNetOffRelief = taxOnTIncome - personalRelief;
-  let paye = taxNetOffRelief;
-  let chargeableIncome = taxableIncome;
-  let nhifContribution = evaluateNhif(b_salary);
-  let netPay = chargeableIncome - (paye + nhifContribution);
-  console.log(evaluateIncomeTax(b_salary));
-  console.log(b_salary, benefits);
-  let checked = radioChecked();
-  console.log(checked);
+  if (b_salary === undefined || benefits === undefined) return;
 
-  let formatArray = [
+  let personalRelief = 2400;
+  let defaultChecked = radioChecked();
+
+  let chargeableIncome = b_salary + benefits;
+
+  let pensionConribution = evaluateNewNssfPension(b_salary);
+  let incomeAfterPension = chargeableIncome - pensionConribution;
+
+  let benefitsInKind = benefits * 0.3;
+  let taxableIncome = incomeAfterPension + benefitsInKind;
+
+  let taxOnTIncome = evaluateIncomeTax(taxableIncome);
+  let taxNetOffRelief = taxOnTIncome - personalRelief;
+  let paye = Math.max(taxNetOffRelief, 0);
+
+  // Calculate AHL
+  let ahlDeduction = evaluateAffordableHousingLevy(b_salary);
+  
+  let chargeableIncomeAfterAHL = chargeableIncome - ahlDeduction;
+
+  let nhifContribution = evaluateNhif(b_salary);
+
+  let netPay = chargeableIncomeAfterAHL - (paye + nhifContribution );
+
+  resultTable(
     b_salary,
     benefits,
     pensionConribution,
@@ -242,251 +264,16 @@ const compileResultsDisplay = () => {
     personalRelief,
     taxNetOffRelief,
     paye,
-    chargeableIncome,
+    ahlDeduction,
+    chargeableIncomeAfterAHL,
     nhifContribution,
-    netPay,
-  ];
-  console.log(formatArray);
+    netPay
+  );
 
-  if (
-    checked.includes("Month") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Month") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    pensionConribution = 0;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Month") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_no")
-  ) {
-    nhifContribution = 0;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Month") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("old_nssf_rates") &&
-    checked.includes("nhif_no")
-  ) {
-    nhifContribution = 0;
-    pensionConribution = oldNssfRate;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Month") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("old_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    pensionConribution = oldNssfRate;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-    // YEAR NOW
-  } else if (
-    checked.includes("Year") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    pensionConribution = pensionConribution * 12;
-    personalRelief = personalRelief * 12;
-    nhifContribution = nhifContribution * 12;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Year") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    pensionConribution = 0.0;
-    console.log(pensionConribution);
-    personalRelief = personalRelief * 12;
-    nhifContribution = nhifContribution * 12;
-    
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Year") &&
-    checked.includes("new_nssf_rates") &&
-    checked.includes("nhif_no")
-  ) {
-    nhifContribution = 0;
-    pensionConribution = pensionConribution * 12;
-    personalRelief = personalRelief * 12;
-
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Year") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("old_nssf_rates") &&
-    checked.includes("nhif_no")
-  ) {
-    pensionConribution = pensionConribution * 12;
-    personalRelief = personalRelief * 12;
-    nhifContribution = nhifContribution * 12;
-    nhifContribution = oldNssfRate * 12;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  } else if (
-    checked.includes("Year") &&
-    checked.includes("nssf_yes") &&
-    checked.includes("old_nssf_rates") &&
-    checked.includes("nhif_yes")
-  ) {
-    pensionConribution = oldNssfRate;
-    resultTable(
-      b_salary,
-      benefits,
-      pensionConribution,
-      incomeAfterPension,
-      benefitsInKind,
-      taxableIncome,
-      taxOnTIncome,
-      personalRelief,
-      taxNetOffRelief,
-      paye,
-      chargeableIncome,
-      nhifContribution,
-      netPay
-    );
-  }
+  outputSection.classList.remove("nothing");
 };
 
-calculateBtn.addEventListener("click", () => {
-  if (payAndBenefitsInputs[0].value == "") {
-    alert("Can't Calculate Empty values!");
-    return;
-  } else {
-    outputSection.classList.remove("nothing");
-    compileResultsDisplay();
-  }
+calculateBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  compileResultsDisplay();
 });
-

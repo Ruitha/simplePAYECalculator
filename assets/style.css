@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital@1&family=Lato:wght@300&family=Ubuntu+Condensed&display=swap');
 :root {
     --main-font-family: 'Poppins',
@@ -95,8 +100,8 @@ form {
 form .form-group {
     display: flex;
     align-items: center;
-    height: 80px;
-    gap: 50px;
+    height: 70px;
+    gap: 50px2;
 }
 form .form-group >label, .flex-section * {
     width: 150px;
