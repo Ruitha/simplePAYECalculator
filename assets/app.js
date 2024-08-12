@@ -3,7 +3,7 @@ const radioOptions = document.querySelectorAll("[data-option]");
 const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
 const basicSalaryInput = document.getElementById("basic-salary");
 const benefitsInput = document.getElementById("benefits");
-const calculateBtn = document.querySelector("#submit");
+const calculateBtn = document.querySelector("#calculateBtn");
 const outputSection = document.querySelector(".output");
 const tableResultFields = document.querySelectorAll("td");
 
@@ -46,55 +46,55 @@ function resultTable(
     <table id="results-t">
         <tr>
             <th>Income Before Pension Deduction</th>
-            <td>${kshFormat.format(b_salary)}</td>
+            <td>${kshFormat.format(b_salary ?? 0)}</td>
         </tr>
         <tr>
             <th>Deductible NSSF Pension Contribution</th>
-            <td>${kshFormat.format(pensionConribution)}</td>
+            <td>${kshFormat.format(pensionConribution ?? 0)}</td>
         </tr>
         <tr>
             <th>Income After Pension Deductions</th>
-            <td>${kshFormat.format(incomeAfterPension)}</td>
+            <td>${kshFormat.format(incomeAfterPension ?? 0)}</td>
         </tr>
         <tr>
             <th>Benefits in Kind</th>
-            <td>${kshFormat.format(benefitsInKind) ?? 0}</td>
+            <td>${kshFormat.format(benefitsInKind ?? 0)}</td>
         </tr>
         <tr>
             <th>Taxable Income</th>
-            <td>${kshFormat.format(taxableIncome)}</td>
+            <td>${kshFormat.format(taxableIncome ?? 0)}</td>
         </tr>
         <tr>
             <th>Tax on Taxable Income</th>
-            <td>${kshFormat.format(taxOnTIncome)}</td>
+            <td>${kshFormat.format(taxOnTIncome ?? 0)}</td>
         </tr>
         <tr>
             <th>Personal Relief</th>
-            <td>${kshFormat.format(personalRelief)}</td>
+            <td>${kshFormat.format(personalRelief ?? 0)}</td>
         </tr>
         <tr>
             <th>Tax Net Off Relief</th>
-            <td>${kshFormat.format(taxNetOffRelief)}</td>
+            <td>${kshFormat.format(taxNetOffRelief ?? 0)}</td>
         </tr>
         <tr>
             <th>PAYE</th>
-            <td>${kshFormat.format(paye)}</td>
+            <td>${kshFormat.format(paye ?? 0)}</td>
         </tr>
         <tr>
             <th>Affordable Housing</th>
-            <td>${kshFormat.format(ahlDeduction)}</td>
+            <td>${kshFormat.format(ahlDeduction ?? 0 )}</td>
         </tr>
         <tr>
             <th>Chargeable Income</th>
-            <td>${kshFormat.format(chargeableIncome)}</td>
+            <td>${kshFormat.format(chargeableIncome ?? 0)}</td>
         </tr>
         <tr>
             <th>NHIF Contribution</th>
-            <td>${kshFormat.format(nhifContribution)}</td>
+            <td>${kshFormat.format(nhifContribution ?? 0)}</td>
         </tr>
         <tr id="netpay">
             <th>Net Pay</th>
-            <td>${kshFormat.format(netPay)}</td>
+            <td>${kshFormat.format(netPay ?? 0)}</td>
         </tr>
     </table>
   `;
@@ -118,7 +118,7 @@ const getPayAndBenefits = () => {
   let inputs = [];
 
   for (let salaryBenInp of payAndBenefitsInputs) {
-    if (salaryBenInp.value === "") {
+    if (salaryBenInp.value === " ") {
       alert("Cannot calculate Empty values");
       return [];
     }
@@ -227,10 +227,11 @@ const evaluateAffordableHousingLevy = (b_salary) => {
 // Computing all Deductions 
 const compileResultsDisplay = () => {
   let [b_salary, benefits] = getPayAndBenefits();
+
   if (b_salary === undefined || benefits === undefined) return;
 
   let personalRelief = 2400;
-  let defaultChecked = radioChecked();
+  // let defaultChecked = radioChecked();
 
   let chargeableIncome = b_salary + benefits;
 
@@ -272,6 +273,11 @@ const compileResultsDisplay = () => {
 
   outputSection.classList.remove("nothing");
 };
+
+calculateBtn.addEventListener("click", (event) => {
+  event.preventDefault(); // prevent form submission
+  performCalculations();
+});
 
 calculateBtn.addEventListener("click", (event) => {
   event.preventDefault();

@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<html>
 <html lang="en" data-theme="nord">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PAYETaxCalcuator</title>
-    <!-- <link rel="stylesheet" href="./assets/style.css" /> -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/style.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     
   </head>
@@ -85,19 +85,19 @@
     </nav>
 
     <main>
-      <div class="flex w-full min-h-screen justify-center items-center bg-white">
-        <div class="flex flex-row justify-center items-center space-x-5 p-5">
+      <div class="flex w-full min-h-screen justify-center bg-white">
+        <div class="flex flex-row justify-center space-x-5 p-8">
         <!-- Input Section -->
-        <div class="card bg-base-300 rounded-box grid flex-grow p-5">
+        <div class="card bg-base-300 rounded-box grid flex-grow p-8">
         <form action="">
           <div class="form-group">
             <label for="pay-period">Pay Period: </label>
             <div class="flex">
-              <section">
+              <section>
                 <input type="radio" name="pay-period" class="radio" data-option value="Month" checked/>
                 <p>Month</p>
               </section>
-              <section">
+              <section>
                 <input type="radio" name="pay-period" class="radio" data-option value="Year" />
                 
                 <p>Year</p>
@@ -128,12 +128,12 @@
           <div class="form-group">
             <label for="ded-nssf">Deduct NSSF: </label>
             <div class="flex-section ">
-              <section">
+              <section>
                 <input type="radio" name="ded-nssf" class="radio" value="nssf_yes" checked />
                 
                 <p>Yes</p>
               </section>
-              <section">
+              <section>
                 <input type="radio" name="ded-nssf" class="radio" value="nssf_no" />
                 
                 <p>No</p>
@@ -144,12 +144,12 @@
           <div class="form-group">
             <label for="nssf-rates">NSSF Rates: </label>
             <div class="flex-section mobl">
-              <section">
+              <section>
                 <input type="radio" name="nssf-rates" class="radio" data-option='to-disable' value="new_nssf_rates" checked />
                 
                 <p>New NSSF Rates(Tiered)</p>
               </section>
-              <section">
+              <section>
                 <input type="radio" name="nssf-rates" class="radio" data-option='to-disable' value="old_nssf_rates" />
                 
                 <p>OLD NSSF Rates(KSH200)</p>
@@ -160,12 +160,12 @@
           <div class="form-group">
             <label for="ded-nhif">Deduct NHIF: </label>
             <div class="flex-section">
-              <section">
+              <section>
                 <input type="radio" name="ded-nhif" class="radio" data-option value="nhif_yes" checked/>
                 
                 <p>Yes</p>
               </section>
-              <section">
+              <section>
                 <input type="radio" name="ded-nhif" class="radio" data-option value="nhif_no" />
                 
                 <p>No</p>
@@ -190,7 +190,7 @@
           </div>
 
           <div class="form-group">
-            <button class="btn btn-outline btn-wide btn-primary" input type="button" value="CALCULATE" id="submit">CALCULATE</button>
+            <button class="btn btn-outline btn-wide btn-primary"  id="calculateBtn">CALCULATE</button>
           </div>
         </form>
       </div>
@@ -209,11 +209,11 @@
 
                 <tr class="hover">
                     <th>Income Before Pension Deduction</th>
-                    <td>${basicSalary ?? 0}</td>
+                    <td>{basicSalary ?? 0}</td>
                 </tr>
                   <tr class="hover">
                     <th>Deductible NSSF Pension Contribution</th>
-                    <td>${benefits ?? 0}</td>
+                    <td>{benefits ?? 0}</td>
                 </tr>
                   <tr class="hover">
                     <th>Income After Pension Deductions</th>
