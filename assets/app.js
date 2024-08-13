@@ -28,7 +28,7 @@ const waitTime = (timeoutSecs) => {
 
 function resultTable(
   b_salary,
-  benefits,
+  _benefits,
   pensionConribution,
   incomeAfterPension,
   benefitsInKind,
@@ -275,11 +275,6 @@ const compileResultsDisplay = () => {
 };
 
 calculateBtn.addEventListener("click", (event) => {
-  event.preventDefault(); // prevent form submission
-  performCalculations();
-});
-
-calculateBtn.addEventListener("click", (event) => {
-  event.preventDefault();
+  event.preventDefault();  // prevent form submission
   compileResultsDisplay();
 });
