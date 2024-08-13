@@ -1,4 +1,5 @@
 const onNssfNo = document.querySelectorAll("[data-option='to-disable']");
+
 const radioOptions = document.querySelectorAll("[data-option]");
 const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
 const basicSalaryInput = document.getElementById("basic-salary");
@@ -11,13 +12,14 @@ let kshFormat = Intl.NumberFormat("en-KE", {
   style: "currency",
   currency: "KSH",
 });
-outputSection.classList.add("nothing");
+// outputSection.classList.add("nothing");
 
 const formatIfIsNan = (elem) => {
   if (isNaN(elem)) {
     elem = kshFormat.format(elem);
   }
 };
+
 
 const waitTime = (timeoutSecs) => {
   return new Promise((resolve) => {
@@ -26,7 +28,7 @@ const waitTime = (timeoutSecs) => {
   });
 };
 
-function resultTable(
+const resultTable = (
   b_salary,
   _benefits,
   pensionConribution,
@@ -41,7 +43,7 @@ function resultTable(
   chargeableIncome,
   nhifContribution,
   netPay
-) {
+) => {
   outputSection.innerHTML = `
     <table id="results-t">
         <tr>
@@ -245,7 +247,6 @@ const compileResultsDisplay = () => {
   let taxNetOffRelief = taxOnTIncome - personalRelief;
   let paye = Math.max(taxNetOffRelief, 0);
 
-  // Calculate AHL
   let ahlDeduction = evaluateAffordableHousingLevy(b_salary);
   
   let chargeableIncomeAfterAHL = chargeableIncome - ahlDeduction;
@@ -271,7 +272,7 @@ const compileResultsDisplay = () => {
     netPay
   );
 
-  outputSection.classList.remove("nothing");
+  // outputSection.classList.remove("nothing");
 };
 
 calculateBtn.addEventListener("click", (event) => {
