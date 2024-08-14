@@ -12,7 +12,7 @@ let kshFormat = Intl.NumberFormat("en-KE", {
   style: "currency",
   currency: "KSH",
 });
-// outputSection.classList.add("nothing");
+outputSection.classList.add("nothing");
 
 const formatIfIsNan = (elem) => {
   if (isNaN(elem)) {
@@ -272,7 +272,7 @@ const compileResultsDisplay = () => {
     netPay
   );
 
-  // outputSection.classList.remove("nothing");
+  outputSection.classList.remove("nothing");
 };
 
 calculateBtn.addEventListener("click", (event) => {
