@@ -1,32 +1,9 @@
-const onNssfNo = document.querySelectorAll("[data-option='to-disable']");
-
-const radioOptions = document.querySelectorAll("[data-option]");
-const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
-const basicSalaryInput = document.getElementById("basic-salary");
-const benefitsInput = document.getElementById("benefits");
-const calculateBtn = document.querySelector("#calculateBtn");
 const outputSection = document.querySelector(".output");
-const tableResultFields = document.querySelectorAll("td");
 
 let kshFormat = Intl.NumberFormat("en-KE", {
   style: "currency",
   currency: "KSH",
 });
-outputSection.classList.add("nothing");
-
-const formatIfIsNan = (elem) => {
-  if (isNaN(elem)) {
-    elem = kshFormat.format(elem);
-  }
-};
-
-
-const waitTime = (timeoutSecs) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeoutSecs * 1000);
-    clearTimeout();
-  });
-};
 
 const resultTable = (
   b_salary,
@@ -37,6 +14,8 @@ const resultTable = (
   taxableIncome,
   taxOnTIncome,
   personalRelief,
+  insuranceRelief,
+  housingRelief,
   taxNetOffRelief,
   paye,
   ahlDeduction,
@@ -45,7 +24,10 @@ const resultTable = (
   netPay
 ) => {
   outputSection.innerHTML = `
-    <table id="results-t">
+  <div class="card bg-base-300 rounded-box grid flex-grow p-5">
+        <div class="artboard artboard-demo phone-4 overflow-y-auto h-56">
+    <table id="results-t" class="table">
+    <th> This Month's Payslip</th>
         <tr>
             <th>Income Before Pension Deduction</th>
             <td>${kshFormat.format(b_salary ?? 0)}</td>
@@ -56,7 +38,7 @@ const resultTable = (
         </tr>
         <tr>
             <th>Income After Pension Deductions</th>
-            <td>${kshFormat.format(incomeAfterPension ?? 0)}</td>
+            <td>${kshFormat.format(incomeAfterPension ?incomeAfterPension: 0)}</td>
         </tr>
         <tr>
             <th>Benefits in Kind</th>
@@ -73,6 +55,14 @@ const resultTable = (
         <tr>
             <th>Personal Relief</th>
             <td>${kshFormat.format(personalRelief ?? 0)}</td>
+        </tr>
+        <tr>
+            <th>Insurance Relief</th>
+            <td>${kshFormat.format(insuranceRelief ?? 0)}</td>
+        </tr>
+        <tr>
+            <th>Housing Levy Relief</th>
+            <td>${kshFormat.format(housingRelief ?? 0)}</td>
         </tr>
         <tr>
             <th>Tax Net Off Relief</th>
@@ -99,30 +89,28 @@ const resultTable = (
             <td>${kshFormat.format(netPay ?? 0)}</td>
         </tr>
     </table>
+    </div>
+    </div>
   `;
 }
 
-const radioChecked = () => {
+const radioChecked = (radioOptions) => {
   let defaultChecked = [];
   radioOptions.forEach((r_btn) => {
     if (r_btn.checked) {
-      if (r_btn.value == "nssf_no") {
-        return;
-      } else {
-        defaultChecked.push(r_btn.value);
-      }
+      defaultChecked.push(r_btn.value);
     }
   });
   return defaultChecked;
 };
 
-const getPayAndBenefits = () => {
+const getPayAndBenefits = (payAndBenefitsInputs) => {
   let inputs = [];
 
   for (let salaryBenInp of payAndBenefitsInputs) {
-    if (salaryBenInp.value === " ") {
-      alert("Cannot calculate Empty values");
-      return [];
+    if (!salaryBenInp.value) {
+      salaryBenInp.value = 0
+      // return
     }
     inputs.push(parseFloat(salaryBenInp.value));
   }
@@ -130,36 +118,45 @@ const getPayAndBenefits = () => {
 };
 
 // Calculate NSSF (Effective February 2024)
-const evaluateNewNssfPension = (b_salary) => {
+const evaluateNewNssfPension = (b_salary, checked) => {
   let pensionContribution = 0;
-  const tier1Limit = 7000;
-  const tier2Limit = 36000;
-  const tierRate = 0.06; // 6% contribution rate
 
-  // Calculate Tier I contribution
-  if (b_salary <= tier1Limit) {
-    pensionContribution = b_salary * tierRate;
-  } else {
-    pensionContribution = tier1Limit * tierRate;
-    // Calculate Tier II contribution
-    if (b_salary <= tier2Limit) {
-      pensionContribution += (b_salary - tier1Limit) * tierRate;
-    } else {
-      pensionContribution += (tier2Limit - tier1Limit) * tierRate;
+  if (checked.includes("nssf_yes")) {
+    if (checked.includes("new_nssf_rates")) {
+      // New NSSF rates calculation
+      const tier1Limit = 7000;
+      const tier2Limit = 36000;
+      const tierRate = 0.06; // 6% contribution rate
+
+      if (b_salary <= tier1Limit) {
+        pensionContribution = b_salary * tierRate;
+      } else {
+        pensionContribution = tier1Limit * tierRate;
+        if (b_salary <= tier2Limit) {
+          pensionContribution += (b_salary - tier1Limit) * tierRate;
+        } else {
+          pensionContribution += (tier2Limit - tier1Limit) * tierRate;
+        }
+      }
+
+      // Ensure the contribution does not exceed the maximum allowed contribution
+      const maxContribution = 2160;
+      pensionContribution = Math.min(pensionContribution, maxContribution);
+
+    } else if (checked.includes("old_nssf_rates")) {
+        // Old NSSF rates calculation
+        pensionContribution = 200;
     }
   }
-
-  // Ensure the contribution does not exceed the maximum allowed contribution
-  const maxContribution = 2160;
-  pensionContribution = Math.min(pensionContribution, maxContribution);
 
   return pensionContribution;
 };
 
 // Calculate NHIF 
-function evaluateNhif(b_salary) {
+function evaluateNhif(b_salary, checked) {
   let nhifContribution;
-  if (b_salary >= 0) {
+  if (checked.includes("nhif_yes")) {
+    // NHIF contribution calculation based on salary
     if (b_salary >= 0 && b_salary <= 5999) {
       nhifContribution = 150;
     } else if (b_salary >= 6000 && b_salary <= 7999) {
@@ -194,12 +191,14 @@ function evaluateNhif(b_salary) {
       nhifContribution = 1600;
     } else if (b_salary >= 100000) {
       nhifContribution = 1700;
-    } else {
-      nhifContribution = 0.0;
     }
+  } else if (checked.includes("nhif_no")) {
+    // No NHIF contribution
+    nhifContribution = 0;
   }
+
   return nhifContribution;
-}
+};
 
 // Calculate PAYE 
 const evaluateIncomeTax = (b_salary) => {
@@ -221,61 +220,101 @@ const evaluateIncomeTax = (b_salary) => {
 };
 
 // Calculate AHL Contributions
-const evaluateAffordableHousingLevy = (b_salary) => {
-  const levyRate = 0.015; // 1.5% contribution rate for Affordable Housing Levy
-  return b_salary * levyRate;
+const evaluateAffordableHousingLevy = (b_salary, checked) => {
+  if (checked.includes("ahl_yes")) {
+    const levyRate = 0.015; // 1.5% contribution rate for Affordable Housing Levy
+    return b_salary * levyRate;
+  }
+  return 0
+};
+
+// Calcualting insurance relief
+function calculateInsuranceRelief(nhifContribution) {
+  // Calculate 15% of the NHIF Contribution
+  let insuranceRelief = 0.15 * nhifContribution;
+
+  // Cap the insurance relief at KES 5000 per month
+  if (insuranceRelief > 5000) {
+      insuranceRelief = 5000;
+  }
+
+  return insuranceRelief;
+};
+
+// Calculating Housing levy relief 
+function calculateHousingRelief(ahlDeduction) {
+  // Calculate 15% of the AHL Deduction
+  let housingRelief = 0.15 * ahlDeduction;
+
+  // Cap the housing relief at KES 9000 per month
+  if (housingRelief > 9000) {
+      housingRelief = 9000;
+  }
+
+  return housingRelief;
 };
 
 // Computing all Deductions 
-const compileResultsDisplay = () => {
-  let [b_salary, benefits] = getPayAndBenefits();
+// 
+const compileResultsDisplay = (payAndBenefitsInputs, checked) => {
 
-  if (b_salary === undefined || benefits === undefined) return;
+  let [b_salary, benefits] = getPayAndBenefits(payAndBenefitsInputs);
 
   let personalRelief = 2400;
-  // let defaultChecked = radioChecked();
 
+  // Calculate chargeable income and deductions
   let chargeableIncome = b_salary + benefits;
-
-  let pensionConribution = evaluateNewNssfPension(b_salary);
+  let pensionConribution = evaluateNewNssfPension(b_salary, checked);
   let incomeAfterPension = chargeableIncome - pensionConribution;
 
-  let benefitsInKind = benefits * 0.3;
+  let benefitsInKind = benefits;
   let taxableIncome = incomeAfterPension + benefitsInKind;
 
-  let taxOnTIncome = evaluateIncomeTax(taxableIncome);
-  let taxNetOffRelief = taxOnTIncome - personalRelief;
-  let paye = Math.max(taxNetOffRelief, 0);
-
-  let ahlDeduction = evaluateAffordableHousingLevy(b_salary);
-  
+  // Evaluate the Affordable Housing Levy (AHL) deduction
+  let ahlDeduction = evaluateAffordableHousingLevy(b_salary, checked);
+  let monthlyHousingRelief = calculateHousingRelief(ahlDeduction); // Calculate Housing Relief based on AHL Deduction
   let chargeableIncomeAfterAHL = chargeableIncome - ahlDeduction;
 
-  let nhifContribution = evaluateNhif(b_salary);
+  // Evaluate NHIF contribution and Insurance Relief
+  let nhifContribution = evaluateNhif(b_salary, checked);
+  let monthlyInsuranceRelief = calculateInsuranceRelief(nhifContribution); // Calculate Insurance Relief based on NHIF Contribution
 
-  let netPay = chargeableIncomeAfterAHL - (paye + nhifContribution );
+  // Calculate tax and net pay
+  let taxOnTIncome = evaluateIncomeTax(taxableIncome);
+  let taxNetOffRelief = taxOnTIncome - (personalRelief + monthlyInsuranceRelief + monthlyHousingRelief);
+  let paye = Math.max(taxNetOffRelief, 0);
+  
+  let netPay = chargeableIncomeAfterAHL - (paye + nhifContribution);
 
-  resultTable(
-    b_salary,
-    benefits,
-    pensionConribution,
-    incomeAfterPension,
-    benefitsInKind,
-    taxableIncome,
-    taxOnTIncome,
-    personalRelief,
-    taxNetOffRelief,
-    paye,
-    ahlDeduction,
-    chargeableIncomeAfterAHL,
-    nhifContribution,
-    netPay
+  resultTable ( 
+      b_salary,
+      benefits,
+      pensionConribution,
+      incomeAfterPension,
+      benefitsInKind,
+      taxableIncome,
+      taxOnTIncome,
+      personalRelief,
+      monthlyInsuranceRelief, // Pass the calculated insurance relief
+      monthlyHousingRelief, // Pass the calculated housing relief
+      taxNetOffRelief,
+      paye,
+      ahlDeduction,
+      chargeableIncomeAfterAHL,
+      nhifContribution,
+      netPay
   );
 
-  outputSection.classList.remove("nothing");
 };
+
 
 calculateBtn.addEventListener("click", (event) => {
   event.preventDefault();  // prevent form submission
-  compileResultsDisplay();
+
+  const radioOptions = document.querySelectorAll("[data-option]");
+  const payAndBenefitsInputs = document.querySelectorAll("[data-num]");
+
+  let checked = radioChecked(radioOptions)
+  
+  compileResultsDisplay(payAndBenefitsInputs, checked);
 });

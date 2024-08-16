@@ -90,7 +90,7 @@
         <div class="flex flex-row justify-center space-x-5 p-8">
         <!-- Input Section -->
         <div class="card bg-base-300 rounded-box grid flex-grow p-8">
-        <form action="">
+        <!-- <form action=""> -->
           <div class="form-group">
             <label for="pay-period">Pay Period: </label>
             <div class="flex">
@@ -130,12 +130,12 @@
             <label for="ded-nssf">Deduct NSSF: </label>
             <div class="flex-section ">
               <section>
-                <input type="radio" name="ded-nssf" class="radio" value="nssf_yes" checked />
+                <input type="radio" name="ded-nssf" class="radio" data-option value="nssf_yes" checked />
                 
                 <p>Yes</p>
               </section>
               <section>
-                <input type="radio" name="ded-nssf" class="radio" value="nssf_no" />
+                <input type="radio" name="ded-nssf" class="radio" data-option value="nssf_no" />
                 
                 <p>No</p>
               </section>
@@ -146,12 +146,12 @@
             <label for="nssf-rates">NSSF Rates: </label>
             <div class="flex-section mobl">
               <section>
-                <input type="radio" name="nssf-rates" class="radio" data-option='to-disable' value="new_nssf_rates" checked />
+                <input type="radio" name="nssf-rates" class="radio" data-option value="new_nssf_rates" checked />
                 
                 <p>New NSSF Rates(Tiered)</p>
               </section>
               <section>
-                <input type="radio" name="nssf-rates" class="radio" data-option='to-disable' value="old_nssf_rates" />
+                <input type="radio" name="nssf-rates" class="radio" data-option value="old_nssf_rates" />
                 
                 <p>OLD NSSF Rates(KSH200)</p>
               </section>
@@ -196,25 +196,22 @@
         </form>
       </div>
 
-    <div class="divider divider-horizontal"></div>
+    <div class="divider lg:divider-horizontal"></div>
     <div class="section output overflow-x-auto">
       <!-- Table format for showing Calculations -->
     <div class="card bg-base-300 rounded-box grid flex-grow p-5">
-      <div class="mockup-payslip">
-        <div class="camera"></div>
-        <div class="display">
-          <div class="artboard artboard-demo phone-4 overflow-y-auto h-56">
+        <div class="artboard artboard-demo phone-4 overflow-y-auto h-56">
         <!-- dynamic create table -->
             <table id="results-t" class="table">
               <th>This Month's Payslip</th>
 
                 <tr class="hover">
                     <th>Income Before Pension Deduction</th>
-                    <td>{basicSalary ?? 0}</td>
+                    <td>0.00</td>
                 </tr>
                   <tr class="hover">
                     <th>Deductible NSSF Pension Contribution</th>
-                    <td>{benefits ?? 0}</td>
+                    <td>0.00</td>
                 </tr>
                   <tr class="hover">
                     <th>Income After Pension Deductions</th>
@@ -237,6 +234,14 @@
                     <td>0.00</td>
                 </tr>
                   <tr class="hover">
+                    <th>Insurance Relief</th>
+                    <td>0.00</td>
+                </tr>
+                  <tr class="hover">
+                    <th>Housing Levy Relief</th>
+                    <td>0.00</td>
+                </tr>
+                  <tr class="hover">
                     <th>Tax Off Relief</th>
                     <td>0.00</td>
                 </tr>
@@ -244,9 +249,9 @@
                     <th>PAYE</th>
                     <td>0.00</td>
                 </tr>
-                <tr class="hover">
-                  <th>Affordable Housing</th>
-                  <td id="ahl-contribution">0.00</td>
+                  <tr class="hover">
+                    <th>Affordable Housing</th>
+                    <td id="ahl-contribution">0.00</td>
                 </tr>
                   <tr class="hover">
                     <th>Chargeable Income</th>
